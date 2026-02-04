@@ -1,3 +1,13 @@
+Projection-oriented customization
+================================
+
+Thank you for providing such a useful library.
+This repository contains a mirrored-display version of the original.
+
+I am creating a wall‑projection clock using 7‑segment LEDs, and the projected image needs to be flipped both vertically and horizontally. To achieve this, I customized the original display patterns accordingly.
+
+------------
+
 TM1637
 ======
 Arduino library for TM1637 (LED Driver)
