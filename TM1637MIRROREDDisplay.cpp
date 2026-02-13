@@ -21,7 +21,7 @@ extern "C" {
   #include <inttypes.h>
 }
 
-#include <TM1637Display.h>
+#include "TM1637MIRROREDDisplay.h"
 #include <Arduino.h>
 
 #define TM1637_I2C_COMM1    0x40
@@ -36,29 +36,49 @@ extern "C" {
 //  E |   | C
 //     ---
 //      D
-const uint8_t digitToSegment[] = {
- // XGFEDCBA
-  0b00111111,    // 0
-  0b00000110,    // 1
-  0b01011011,    // 2
-  0b01001111,    // 3
-  0b01100110,    // 4
-  0b01101101,    // 5
-  0b01111101,    // 6
-  0b00000111,    // 7
-  0b01111111,    // 8
-  0b01101111,    // 9
-  0b01110111,    // A
-  0b01111100,    // b
-  0b00111001,    // C
-  0b01011110,    // d
-  0b01111001,    // E
-  0b01110001     // F
-  };
+ const uint8_t digitToSegment[] = {
+  // XGFEDCBA
+   0b00111111, // 0
+   0b00110000, // 1
+   0b01101101, // 2
+   0b01111001, // 3
+   0b01110010, // 4
+   0b01011011, // 5
+   0b01011111, // 6
+   0b00110001, // 7
+   0b01111111, // 8
+   0b01111011, // 9
+   0b01110111, // A
+   0b01011110, // b
+   0b01001100, // C
+   0b01111100, // d
+   0b01001111, // E
+   0b01000111  // F
+   };
+//   const uint8_t digitToSegment[] = {
+//  // XGFEDCBA
+//   0b00111111,    // 0
+//   0b00000110,    // 1
+//   0b01011011,    // 2
+//   0b01001111,    // 3
+//   0b01100110,    // 4
+//   0b01101101,    // 5
+//   0b01111101,    // 6
+//   0b00000111,    // 7
+//   0b01111111,    // 8
+//   0b01101111,    // 9
+//   0b01110111,    // A
+//   0b01111100,    // b
+//   0b00111001,    // C
+//   0b01011110,    // d
+//   0b01111001,    // E
+//   0b01110001     // F
+//   };
+
 
 static const uint8_t minusSegments = 0b01000000;
 
-TM1637Display::TM1637Display(uint8_t pinClk, uint8_t pinDIO, unsigned int bitDelay)
+TM1637MIRROREDDisplay::TM1637MIRROREDDisplay(uint8_t pinClk, uint8_t pinDIO, unsigned int bitDelay)
 {
 	// Copy the pin numbers
 	m_pinClk = pinClk;
@@ -73,12 +93,12 @@ TM1637Display::TM1637Display(uint8_t pinClk, uint8_t pinDIO, unsigned int bitDel
 	digitalWrite(m_pinDIO, LOW);
 }
 
-void TM1637Display::setBrightness(uint8_t brightness, bool on)
+void TM1637MIRROREDDisplay::setBrightness(uint8_t brightness, bool on)
 {
 	m_brightness = (brightness & 0x7) | (on? 0x08 : 0x00);
 }
 
-void TM1637Display::setSegments(const uint8_t segments[], uint8_t length, uint8_t pos)
+void TM1637MIRROREDDisplay::setSegments(const uint8_t segments[], uint8_t length, uint8_t pos)
 {
     // Write COMM1
 	start();
@@ -101,30 +121,30 @@ void TM1637Display::setSegments(const uint8_t segments[], uint8_t length, uint8_
 	stop();
 }
 
-void TM1637Display::clear()
+void TM1637MIRROREDDisplay::clear()
 {
     uint8_t data[] = { 0, 0, 0, 0 };
 	setSegments(data);
 }
 
-void TM1637Display::showNumberDec(int num, bool leading_zero, uint8_t length, uint8_t pos)
+void TM1637MIRROREDDisplay::showNumberDec(int num, bool leading_zero, uint8_t length, uint8_t pos)
 {
   showNumberDecEx(num, 0, leading_zero, length, pos);
 }
 
-void TM1637Display::showNumberDecEx(int num, uint8_t dots, bool leading_zero,
+void TM1637MIRROREDDisplay::showNumberDecEx(int num, uint8_t dots, bool leading_zero,
                                     uint8_t length, uint8_t pos)
 {
   showNumberBaseEx(num < 0? -10 : 10, num < 0? -num : num, dots, leading_zero, length, pos);
 }
 
-void TM1637Display::showNumberHexEx(uint16_t num, uint8_t dots, bool leading_zero,
+void TM1637MIRROREDDisplay::showNumberHexEx(uint16_t num, uint8_t dots, bool leading_zero,
                                     uint8_t length, uint8_t pos)
 {
   showNumberBaseEx(16, num, dots, leading_zero, length, pos);
 }
 
-void TM1637Display::showNumberBaseEx(int8_t base, uint16_t num, uint8_t dots, bool leading_zero,
+void TM1637MIRROREDDisplay::showNumberBaseEx(int8_t base, uint16_t num, uint8_t dots, bool leading_zero,
                                     uint8_t length, uint8_t pos)
 {
     bool negative = false;
@@ -177,18 +197,18 @@ void TM1637Display::showNumberBaseEx(int8_t base, uint16_t num, uint8_t dots, bo
     setSegments(digits, length, pos);
 }
 
-void TM1637Display::bitDelay()
+void TM1637MIRROREDDisplay::bitDelay()
 {
 	delayMicroseconds(m_bitDelay);
 }
 
-void TM1637Display::start()
+void TM1637MIRROREDDisplay::start()
 {
   pinMode(m_pinDIO, OUTPUT);
   bitDelay();
 }
 
-void TM1637Display::stop()
+void TM1637MIRROREDDisplay::stop()
 {
 	pinMode(m_pinDIO, OUTPUT);
 	bitDelay();
@@ -198,7 +218,7 @@ void TM1637Display::stop()
 	bitDelay();
 }
 
-bool TM1637Display::writeByte(uint8_t b)
+bool TM1637MIRROREDDisplay::writeByte(uint8_t b)
 {
   uint8_t data = b;
 
@@ -243,7 +263,7 @@ bool TM1637Display::writeByte(uint8_t b)
   return ack;
 }
 
-void TM1637Display::showDots(uint8_t dots, uint8_t* digits)
+void TM1637MIRROREDDisplay::showDots(uint8_t dots, uint8_t* digits)
 {
     for(int i = 0; i < 4; ++i)
     {
@@ -252,7 +272,7 @@ void TM1637Display::showDots(uint8_t dots, uint8_t* digits)
     }
 }
 
-uint8_t TM1637Display::encodeDigit(uint8_t digit)
+uint8_t TM1637MIRROREDDisplay::encodeDigit(uint8_t digit)
 {
 	return digitToSegment[digit & 0x0f];
 }

@@ -14,23 +14,32 @@
 //  License along with this library; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#ifndef __TM1637DISPLAY__
-#define __TM1637DISPLAY__
+#ifndef __TM1637MIRROREDDISPLAY__
+#define __TM1637MIRROREDDISPLAY__
 
 #include <inttypes.h>
 
-#define SEG_A   0b00000001
-#define SEG_B   0b00000010
-#define SEG_C   0b00000100
-#define SEG_D   0b00001000
-#define SEG_E   0b00010000
-#define SEG_F   0b00100000
-#define SEG_G   0b01000000
-#define SEG_DP  0b10000000
+// #define SEG_A  0b00000001
+// #define SEG_B  0b00000010
+// #define SEG_C  0b00000100
+// #define SEG_D  0b00001000
+// #define SEG_E  0b00010000
+// #define SEG_F  0b00100000
+// #define SEG_G  0b01000000
+// #define SEG_DP 0b10000000
+
+#define SEG_A  0b00001000
+#define SEG_B  0b00010000
+#define SEG_C  0b00100000
+#define SEG_D  0b00000001
+#define SEG_E  0b00000010
+#define SEG_F  0b00000100
+#define SEG_G  0b01000000
+#define SEG_DP 0b10000000
 
 #define DEFAULT_BIT_DELAY  100
 
-class TM1637Display {
+class TM1637MIRROREDDisplay {
 
 public:
   //! Initialize a TM1637Display object, setting the clock and
@@ -40,7 +49,7 @@ public:
   //! @param pinDIO - The number of the digital pin connected to the DIO pin of the module
   //! @param bitDelay - The delay, in microseconds, between bit transition on the serial
   //!                   bus connected to the display
-  TM1637Display(uint8_t pinClk, uint8_t pinDIO, unsigned int bitDelay = DEFAULT_BIT_DELAY);
+  TM1637MIRROREDDisplay(uint8_t pinClk, uint8_t pinDIO, unsigned int bitDelay = DEFAULT_BIT_DELAY);
 
   //! Sets the brightness of the display.
   //!
@@ -163,4 +172,4 @@ private:
 	unsigned int m_bitDelay;
 };
 
-#endif // __TM1637DISPLAY__
+#endif // __TM1637MIRROREDDISPLAY__
