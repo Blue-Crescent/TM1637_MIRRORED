@@ -6,6 +6,11 @@ This repository contains a mirrored-display version of the original.
 
 I am creating a wall‑projection clock using 7‑segment LEDs, and the projected image needs to be flipped both vertically and horizontally. To achieve this, I customized the original display patterns accordingly.
 
+![IMG_6919](https://github.com/user-attachments/assets/7b2fd701-3110-44ad-9b76-dd40d1d76cd7)
+
+![IMG_6914](https://github.com/user-attachments/assets/741ee7c6-f38a-4502-842e-35e3c441f44f)
+
+
 ------------
 
 TM1637
